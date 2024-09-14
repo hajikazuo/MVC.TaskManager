@@ -5,9 +5,9 @@ using System.Text.Json.Serialization;
 
 namespace MVC.TaskManager.Models
 {
-    public class Task
+    public class TaskItem
     {
-        public Guid TaskId { get; set; }
+        public Guid TaskItemId { get; set; }
 
         public required string Name { get; set; }
         public string? Description { get; set; }
@@ -16,7 +16,7 @@ namespace MVC.TaskManager.Models
         public bool IsComplete { get; set; }
         public Status Status { get; set; }
 
-        public Guid UserId { get; set; }
+        public Guid? UserId { get; set; }
         public virtual User? User { get; set; }
 
         [JsonIgnore]

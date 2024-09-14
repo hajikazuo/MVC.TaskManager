@@ -7,7 +7,7 @@ namespace MVC.TaskManager.Models.Users
     {
 
         [JsonIgnore]
-        public virtual ICollection<Task>? Tasks { get; set; }
+        public virtual ICollection<TaskItem>? TaskItems { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<SubTask>? SubTasks { get; set; }

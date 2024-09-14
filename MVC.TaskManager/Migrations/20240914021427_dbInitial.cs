@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MVC.TaskManager.Migrations
 {
     /// <inheritdoc />
-    public partial class dbContext : Migration
+    public partial class dbInitial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -157,54 +157,54 @@ namespace MVC.TaskManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tasks",
+                name: "TaskItems",
                 columns: table => new
                 {
-                    TaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TaskItemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsComplete = table.Column<bool>(type: "bit", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tasks", x => x.TaskId);
+                    table.PrimaryKey("PK_TaskItems", x => x.TaskItemId);
                     table.ForeignKey(
-                        name: "FK_Tasks_AspNetUsers_UserId",
+                        name: "FK_TaskItems_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "SubTasks",
                 columns: table => new
                 {
-                    SubtaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SubTaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsComplete = table.Column<bool>(type: "bit", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    TaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    TaskItemId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SubTasks", x => x.SubtaskId);
+                    table.PrimaryKey("PK_SubTasks", x => x.SubTaskId);
                     table.ForeignKey(
                         name: "FK_SubTasks_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_SubTasks_Tasks_TaskId",
-                        column: x => x.TaskId,
-                        principalTable: "Tasks",
-                        principalColumn: "TaskId",
+                        name: "FK_SubTasks_TaskItems_TaskItemId",
+                        column: x => x.TaskItemId,
+                        principalTable: "TaskItems",
+                        principalColumn: "TaskItemId",
                         onDelete: ReferentialAction.SetNull);
                 });
 
@@ -248,9 +248,9 @@ namespace MVC.TaskManager.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SubTasks_TaskId",
+                name: "IX_SubTasks_TaskItemId",
                 table: "SubTasks",
-                column: "TaskId");
+                column: "TaskItemId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SubTasks_UserId",
@@ -258,8 +258,8 @@ namespace MVC.TaskManager.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tasks_UserId",
-                table: "Tasks",
+                name: "IX_TaskItems_UserId",
+                table: "TaskItems",
                 column: "UserId");
         }
 
@@ -288,7 +288,7 @@ namespace MVC.TaskManager.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Tasks");
+                name: "TaskItems");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

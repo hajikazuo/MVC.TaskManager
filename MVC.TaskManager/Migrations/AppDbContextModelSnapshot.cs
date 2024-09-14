@@ -24,7 +24,7 @@ namespace MVC.TaskManager.Migrations
 
             modelBuilder.Entity("MVC.TaskManager.Models.SubTask", b =>
                 {
-                    b.Property<Guid>("SubtaskId")
+                    b.Property<Guid>("SubTaskId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -44,24 +44,24 @@ namespace MVC.TaskManager.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("TaskId")
+                    b.Property<Guid?>("TaskItemId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("SubtaskId");
+                    b.HasKey("SubTaskId");
 
-                    b.HasIndex("TaskId");
+                    b.HasIndex("TaskItemId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("SubTasks");
                 });
 
-            modelBuilder.Entity("MVC.TaskManager.Models.Task", b =>
+            modelBuilder.Entity("MVC.TaskManager.Models.TaskItem", b =>
                 {
-                    b.Property<Guid>("TaskId")
+                    b.Property<Guid>("TaskItemId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -81,14 +81,14 @@ namespace MVC.TaskManager.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("TaskId");
+                    b.HasKey("TaskItemId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Tasks");
+                    b.ToTable("TaskItems");
                 });
 
             modelBuilder.Entity("MVC.TaskManager.Models.Users.Role", b =>
@@ -290,27 +290,26 @@ namespace MVC.TaskManager.Migrations
 
             modelBuilder.Entity("MVC.TaskManager.Models.SubTask", b =>
                 {
-                    b.HasOne("MVC.TaskManager.Models.Task", "Task")
+                    b.HasOne("MVC.TaskManager.Models.TaskItem", "TaskItem")
                         .WithMany("SubTasks")
-                        .HasForeignKey("TaskId")
+                        .HasForeignKey("TaskItemId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("MVC.TaskManager.Models.Users.User", "User")
                         .WithMany("SubTasks")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
-                    b.Navigation("Task");
+                    b.Navigation("TaskItem");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MVC.TaskManager.Models.Task", b =>
+            modelBuilder.Entity("MVC.TaskManager.Models.TaskItem", b =>
                 {
                     b.HasOne("MVC.TaskManager.Models.Users.User", "User")
-                        .WithMany("Tasks")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("TaskItems")
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -366,7 +365,7 @@ namespace MVC.TaskManager.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MVC.TaskManager.Models.Task", b =>
+            modelBuilder.Entity("MVC.TaskManager.Models.TaskItem", b =>
                 {
                     b.Navigation("SubTasks");
                 });
@@ -375,7 +374,7 @@ namespace MVC.TaskManager.Migrations
                 {
                     b.Navigation("SubTasks");
 
-                    b.Navigation("Tasks");
+                    b.Navigation("TaskItems");
                 });
 #pragma warning restore 612, 618
         }
