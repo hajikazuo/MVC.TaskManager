@@ -2,6 +2,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MVC.TaskManager.Data;
 using MVC.TaskManager.Models.Users;
+using MVC.TaskManager.Repositories.Implementation;
+using MVC.TaskManager.Repositories.Interface;
+using MVC.TaskManager.Services.Implementation;
+using MVC.TaskManager.Services.Interface;
 using System;
 
 namespace MVC.TaskManager
@@ -13,6 +17,10 @@ namespace MVC.TaskManager
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddScoped<ISeedService, SeedService>();
+
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<ITaskItemRepository, TaskItemRepository>();
             builder.Services.AddControllersWithViews();
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -51,6 +59,12 @@ namespace MVC.TaskManager
             app.UseRouting();
 
             app.UseAuthorization();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var seedService = scope.ServiceProvider.GetRequiredService<ISeedService>();
+                seedService.Seed();
+            }
 
             app.MapControllerRoute(
                 name: "default",

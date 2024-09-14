@@ -1,4 +1,5 @@
-﻿using MVC.TaskManager.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MVC.TaskManager.Data;
 using MVC.TaskManager.Models;
 using MVC.TaskManager.Repositories.Interface;
 
@@ -13,11 +14,16 @@ namespace MVC.TaskManager.Repositories.Implementation
             _context = context;
         }
 
+        public async Task<IEnumerable<TaskItem>> GetAllAsync()
+        {
+            return await _context.TaskItems.Include(s => s.SubTasks).ToListAsync();
+        }
+
         public async Task<TaskItem> CreateAsync(TaskItem taskItem)
         {
             await _context.TaskItems.AddAsync(taskItem);
             await _context.SaveChangesAsync();
             return taskItem;
-        }
+        } 
     }
 }
