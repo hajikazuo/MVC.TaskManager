@@ -14,5 +14,23 @@ namespace MVC.TaskManager.Data
         public DbSet<Models.Task> Tasks { get; set; }
         public DbSet<SubTask> SubTasks { get; set; }
         public DbSet<User> Users { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<SubTask>(entity =>
+            {
+                entity.HasOne(x => x.Task)
+                      .WithMany(x => x.SubTasks)
+                      .HasForeignKey(f => f.TaskId)
+                      .OnDelete(DeleteBehavior.SetNull);
+
+                entity.HasOne(x => x.User)
+                      .WithMany(x => x.SubTasks)
+                      .HasForeignKey(f => f.UserId)
+                      .OnDelete(DeleteBehavior.SetNull);
+            });
+        }
     }
 }

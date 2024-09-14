@@ -44,10 +44,10 @@ namespace MVC.TaskManager.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("TaskId")
+                    b.Property<Guid?>("TaskId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("SubtaskId");
@@ -293,14 +293,11 @@ namespace MVC.TaskManager.Migrations
                     b.HasOne("MVC.TaskManager.Models.Task", "Task")
                         .WithMany("SubTasks")
                         .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("MVC.TaskManager.Models.Users.User", "User")
                         .WithMany("SubTasks")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Task");
 
