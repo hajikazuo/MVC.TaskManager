@@ -6,12 +6,11 @@ namespace MVC.TaskManager.Models
 {
     public class SubTask
     {
-        public Guid SubTaskId { get; set; }
+        public int SubTaskId { get; set; }
 
-        public required string Name { get; set; }
+        public string Name { get; set; }
         public string? Description { get; set; }
 
-        public DateTime DueDate { get; set; }
         public bool IsComplete { get; set; }
         public Status Status { get; set; }
 

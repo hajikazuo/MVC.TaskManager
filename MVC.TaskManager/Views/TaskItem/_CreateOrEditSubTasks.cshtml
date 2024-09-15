@@ -1,0 +1,13 @@
+﻿@model IEnumerable<SubTask>
+
+@if (Model != null)
+{
+    foreach (var item in Model)
+    {
+        var itemId = $"itemsAdded_{Guid.NewGuid()}";
+
+        <div id="@itemId">
+            @await Html.PartialAsync("SubTasks", item)
+        </div>
+    }
+}

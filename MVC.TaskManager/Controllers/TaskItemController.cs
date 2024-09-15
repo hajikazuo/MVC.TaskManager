@@ -4,6 +4,7 @@ using MVC.TaskManager.Extensions;
 using MVC.TaskManager.Models;
 using MVC.TaskManager.Models.Enums;
 using MVC.TaskManager.Repositories.Interface;
+using MVC.TaskManager.ViewModels;
 
 namespace MVC.TaskManager.Controllers
 {
@@ -34,14 +35,37 @@ namespace MVC.TaskManager.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(TaskItem task)
+        public async Task<IActionResult> Create(TaskRegistrationViewModel task)
         {
-            var taskItem = await _taskItemRepository.CreateAsync(task);
+            if (ModelState.IsValid)
+            {
+                var taskItem = new TaskItem
+                {
+                    Name = task.Name,
+                    Description = task.Description,
+                    DueDate = task.DueDate,
+                    IsComplete = task.IsComplete,
+                    Status = task.Status,
+                    UserId = task.UserId,
+                    SubTasks = task.SubTasks,
+                };
+
+                taskItem = await _taskItemRepository.CreateAsync(taskItem);
+            }
 
             var users = await _userRepository.GetAllUsersAsync();
             ViewData["UserId"] = new SelectList(users, "Id", "Id");
             ViewData["Status"] = this.AssembleSelectListToEnum(new Status());
             return RedirectToAction(nameof(Index));
+        }
+
+        [ResponseCache(NoStore = true, Duration = 0)]
+        public async Task<IActionResult> NewSubTask()
+        {
+            var users = await _userRepository.GetAllUsersAsync();
+            ViewData["UserId"] = new SelectList(users, "Id", "Id");
+            ViewData["Status"] = this.AssembleSelectListToEnum(new Status());
+            return PartialView("SubTasks", new SubTask());
         }
     }
 }

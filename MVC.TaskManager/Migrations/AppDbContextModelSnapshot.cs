@@ -24,15 +24,14 @@ namespace MVC.TaskManager.Migrations
 
             modelBuilder.Entity("MVC.TaskManager.Models.SubTask", b =>
                 {
-                    b.Property<Guid>("SubTaskId")
+                    b.Property<int>("SubTaskId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubTaskId"));
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DueDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsComplete")
                         .HasColumnType("bit");
@@ -290,17 +289,14 @@ namespace MVC.TaskManager.Migrations
 
             modelBuilder.Entity("MVC.TaskManager.Models.SubTask", b =>
                 {
-                    b.HasOne("MVC.TaskManager.Models.TaskItem", "TaskItem")
+                    b.HasOne("MVC.TaskManager.Models.TaskItem", null)
                         .WithMany("SubTasks")
-                        .HasForeignKey("TaskItemId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("TaskItemId");
 
                     b.HasOne("MVC.TaskManager.Models.Users.User", "User")
                         .WithMany("SubTasks")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("TaskItem");
 
                     b.Navigation("User");
                 });

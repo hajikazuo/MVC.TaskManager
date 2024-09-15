@@ -17,7 +17,6 @@ namespace MVC.TaskManager.Repositories.Implementation
         public async Task<IEnumerable<TaskItem>> GetAllAsync()
         {
             return await _context.TaskItems
-                .Include(s => s.SubTasks)
                 .Include(u => u.User)
                 .ToListAsync();
         }

@@ -1,4 +1,4 @@
-﻿@model TaskItem
+﻿@model TaskRegistrationViewModel
 
 @{
     ViewBag.Title = "Create";
@@ -40,8 +40,57 @@
             <option selected value="">Select user</option>
         </select>
     </div>
+
+    <fieldset>
+        <legend>SubTasks:</legend>
+        <span asp-validation-for="SubTasks" class="text-danger"></span>
+        <div class="form-group">
+            <input type="hidden" value="0" id="qtdDiv" name="qtdDiv" />
+            <div id="collectionItems">
+
+                @await Html.PartialAsync("_CreateOrEditSubTasks", (Model != null && Model.SubTasks != null ? Model.SubTasks : new List<SubTask>()))
+
+            </div>
+            <button type="button" id="btnAddMore" class="btn btn-primary">Add subtask</button>
+        </div>
+    </fieldset>
+
     <div class="form-group mt-3">
         <input type="submit" value="Salvar" class="btn btn-secondary" />
         <a class="btn btn-outline-secondary" asp-action="Index">Back to List</a>
     </div>
 </form>
+
+@section Scripts {
+    <script>
+        $('#btnAddMore').click(function () {
+            var currentNum = parseFloat($("#qtdDiv").val());
+            var numDiv = (currentNum + 1);
+            $("#qtdDiv").val(numDiv);
+            var divIdName = 'div_' + numDiv + 'SubTask';
+            var htmlbtn = '<button type="button" onclick="removeSubTask(\'' + divIdName + '\')"  class="btn-close" aria-label="Close"></button>';
+
+            $.ajax({
+                url: '/TaskItem/NewSubTask',
+                contentType: 'application/html',
+                success: function (html) {
+                    var newDiv = document.createElement('div');
+                    newDiv.setAttribute('id', divIdName);
+                    newDiv.innerHTML = htmlbtn + html;
+                    $('#collectionItems').append(newDiv);
+
+
+                }
+            });
+        });
+
+        function removeSubTask(divNum) {
+            var currentNum = parseFloat($("#qtdDiv").val());
+            var numDiv = (currentNum - 1);
+            $("#qtdDiv").val(numDiv);
+
+            var oldDiv = document.getElementById(divNum);
+            oldDiv.remove();
+        }  
+    </script>
+}

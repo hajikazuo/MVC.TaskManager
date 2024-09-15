@@ -1,11 +1,9 @@
-﻿using MVC.TaskManager.Models.Enums;
-using MVC.TaskManager.Models.Users;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿using MVC.TaskManager.Models;
+using MVC.TaskManager.Models.Enums;
 
-namespace MVC.TaskManager.Models
+namespace MVC.TaskManager.ViewModels
 {
-    public class TaskItem
+    public class TaskRegistrationViewModel
     {
         public Guid TaskItemId { get; set; }
 
@@ -17,13 +15,6 @@ namespace MVC.TaskManager.Models
         public Status Status { get; set; }
 
         public Guid? UserId { get; set; }
-        public virtual User? User { get; set; }
-
         public List<SubTask> SubTasks { get; set; } = new List<SubTask>();
-
-        public void AddSubTask(SubTask subTask)
-        {
-            SubTasks.Add(subTask); 
-        }
     }
 }

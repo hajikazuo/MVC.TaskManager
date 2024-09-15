@@ -20,11 +20,6 @@ namespace MVC.TaskManager.Data
 
             builder.Entity<SubTask>(entity =>
             {
-                entity.HasOne(x => x.TaskItem)
-                      .WithMany(x => x.SubTasks)
-                      .HasForeignKey(f => f.TaskItemId)
-                      .OnDelete(DeleteBehavior.SetNull);
-
                 entity.HasOne(x => x.User)
                       .WithMany(x => x.SubTasks)
                       .HasForeignKey(f => f.UserId)
