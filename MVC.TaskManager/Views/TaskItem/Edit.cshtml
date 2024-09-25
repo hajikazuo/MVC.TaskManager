@@ -1,10 +1,10 @@
 ﻿@model TaskItemViewModel
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Edit";
 }
 
-<h2>Create</h2>
+<h2>Edit</h2>
 
 <form asp-action="Create" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -91,6 +91,6 @@
 
             var oldDiv = document.getElementById(divNum);
             oldDiv.remove();
-        }  
+        }
     </script>
 }

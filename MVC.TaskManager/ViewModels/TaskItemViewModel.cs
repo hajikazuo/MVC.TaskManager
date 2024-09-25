@@ -3,7 +3,7 @@ using MVC.TaskManager.Models.Enums;
 
 namespace MVC.TaskManager.ViewModels
 {
-    public class TaskRegistrationViewModel
+    public class TaskItemViewModel
     {
         public Guid TaskItemId { get; set; }
 

@@ -25,17 +25,23 @@ namespace MVC.TaskManager.Controllers
             return View(taskItems);
         }
 
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var taskItem = await _taskItemRepository.GetByIdAsync(id);
+            return View(taskItem);
+        }
+
         public async Task<IActionResult> Create()
         {
             var users = await _userRepository.GetAllUsersAsync();
-            ViewData["UserId"] = new SelectList(users, "Id", "Id");
+            ViewData["UserId"] = new SelectList(users, "Id", "UserName");
             ViewData["Status"] = this.AssembleSelectListToEnum(new Status());
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(TaskRegistrationViewModel task)
+        public async Task<IActionResult> Create(TaskItemViewModel task)
         {
             if (ModelState.IsValid)
             {
@@ -54,7 +60,65 @@ namespace MVC.TaskManager.Controllers
             }
 
             var users = await _userRepository.GetAllUsersAsync();
-            ViewData["UserId"] = new SelectList(users, "Id", "Id");
+            ViewData["UserId"] = new SelectList(users, "Id", "UserName");
+            ViewData["Status"] = this.AssembleSelectListToEnum(new Status());
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var taskItem = await _taskItemRepository.GetByIdAsync(id);
+
+            if (taskItem == null)
+            {
+                return NotFound();
+            }
+
+            var task = new TaskItemViewModel
+            {
+                TaskItemId = taskItem.TaskItemId,
+                Name = taskItem.Name,
+                Description = taskItem.Description,
+                DueDate = taskItem.DueDate,
+                IsComplete = taskItem.IsComplete,
+                Status = taskItem.Status,
+                UserId = taskItem.UserId,
+                SubTasks = taskItem.SubTasks
+            };
+
+            var users = await _userRepository.GetAllUsersAsync();
+            ViewData["UserId"] = new SelectList(users, "Id", "UserName");
+            ViewData["Status"] = this.AssembleSelectListToEnum(new Status());
+            return View(task);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(Guid id, TaskItemViewModel taskItem)
+        {
+            if (id != taskItem.TaskItemId)
+            {
+                return NotFound();
+            }
+
+            var task = new TaskItem
+            {
+                TaskItemId = taskItem.TaskItemId,
+                Name = taskItem.Name,
+                Description = taskItem.Description,
+                DueDate = taskItem.DueDate,
+                IsComplete = taskItem.IsComplete,
+                Status = taskItem.Status,
+                UserId = taskItem.UserId,
+                SubTasks = taskItem.SubTasks,
+            };
+
+            if (ModelState.IsValid)
+            {
+                await _taskItemRepository.UpdateAsync(task);
+            }
+
+            var users = await _userRepository.GetAllUsersAsync();
+            ViewData["UserId"] = new SelectList(users, "Id", "UserName");
             ViewData["Status"] = this.AssembleSelectListToEnum(new Status());
             return RedirectToAction(nameof(Index));
         }
@@ -63,7 +127,7 @@ namespace MVC.TaskManager.Controllers
         public async Task<IActionResult> NewSubTask()
         {
             var users = await _userRepository.GetAllUsersAsync();
-            ViewData["UserId"] = new SelectList(users, "Id", "Id");
+            ViewData["UserId"] = new SelectList(users, "Id", "UserName");
             ViewData["Status"] = this.AssembleSelectListToEnum(new Status());
             return PartialView("SubTasks", new SubTask());
         }
