@@ -58,7 +58,6 @@ namespace MVC.TaskManager.Services.Implementation
                     Name = "Task example",
                     Description = "A some task",
                     DueDate = DateTime.Now,
-                    IsComplete = false,
                     Status = Models.Enums.Status.Pending,
                     UserId = UserGuid
                 };

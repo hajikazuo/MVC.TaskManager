@@ -50,7 +50,6 @@ namespace MVC.TaskManager.Controllers
                     Name = task.Name,
                     Description = task.Description,
                     DueDate = task.DueDate,
-                    IsComplete = task.IsComplete,
                     Status = task.Status,
                     UserId = task.UserId,
                     SubTasks = task.SubTasks,
@@ -80,7 +79,6 @@ namespace MVC.TaskManager.Controllers
                 Name = taskItem.Name,
                 Description = taskItem.Description,
                 DueDate = taskItem.DueDate,
-                IsComplete = taskItem.IsComplete,
                 Status = taskItem.Status,
                 UserId = taskItem.UserId,
                 SubTasks = taskItem.SubTasks
@@ -106,7 +104,6 @@ namespace MVC.TaskManager.Controllers
                 Name = taskItem.Name,
                 Description = taskItem.Description,
                 DueDate = taskItem.DueDate,
-                IsComplete = taskItem.IsComplete,
                 Status = taskItem.Status,
                 UserId = taskItem.UserId,
                 SubTasks = taskItem.SubTasks,

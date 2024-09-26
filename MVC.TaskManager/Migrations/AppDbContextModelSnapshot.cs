@@ -33,9 +33,6 @@ namespace MVC.TaskManager.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsComplete")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -69,9 +66,6 @@ namespace MVC.TaskManager.Migrations
 
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsComplete")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -289,7 +283,7 @@ namespace MVC.TaskManager.Migrations
 
             modelBuilder.Entity("MVC.TaskManager.Models.SubTask", b =>
                 {
-                    b.HasOne("MVC.TaskManager.Models.TaskItem", null)
+                    b.HasOne("MVC.TaskManager.Models.TaskItem", "TaskItem")
                         .WithMany("SubTasks")
                         .HasForeignKey("TaskItemId");
 
@@ -297,6 +291,8 @@ namespace MVC.TaskManager.Migrations
                         .WithMany("SubTasks")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("TaskItem");
 
                     b.Navigation("User");
                 });

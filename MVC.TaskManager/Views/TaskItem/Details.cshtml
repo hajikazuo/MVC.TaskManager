@@ -1,66 +1,72 @@
-﻿@model TaskItem
+﻿@using MVC.TaskManager.Models.Enums
+@model TaskItem
 
 @{
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<div class="container-xl">
+    <div class="row row-cards">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Task details</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col text-truncate">
+                            <a href="#" class="text-body d-block">@Html.DisplayNameFor(model => model.Name)</a>
+                            <div class="text-secondary text-truncate mt-n1">@Html.DisplayFor(model => model.Name)</div>
+                        </div>
+                        <div class="col text-truncate">
+                            <a href="#" class="text-body d-block">@Html.DisplayNameFor(model => model.Description)</a>
+                            <div class="text-secondary text-truncate mt-n1">@Html.DisplayFor(model => model.Description)</div>
+                        </div>
+                        <div class="col text-truncate">
+                            <a href="#" class="text-body d-block">@Html.DisplayNameFor(model => model.DueDate)</a>
+                            <div class="text-secondary text-truncate mt-n1">@Html.DisplayFor(model => model.DueDate)</div>
+                        </div>
+                        <div class="col text-truncate">
+                            <a href="#" class="text-body d-block">@Html.DisplayNameFor(model => model.Status)</a>
+                            <div class="text-secondary text-truncate mt-n1">@Html.DisplayFor(model => model.Status)</div>
+                        </div>
+                        <div class="col text-truncate">
+                            <a href="#" class="text-body d-block">@Html.DisplayNameFor(model => model.User.UserName)</a>
+                            <div class="text-secondary text-truncate mt-n1">@Html.DisplayFor(model => model.User.UserName)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<div>
-    <h4>TaskItem</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DueDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DueDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.IsComplete)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.IsComplete)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User.UserName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.UserName)
-        </dd>
-        <dt class="col-sm-2">
-            SubTasks
-        </dt>
-        <dd class="col-sm-10">
-            <ul class="list-unstyled">
-                @if (Model.SubTasks != null)
+        @if (Model.SubTasks != null && Model.SubTasks.Count > 0)
+        {
+            <h2 class="mb-3">Subtasks</h2>
+            foreach (var subTask in Model.SubTasks)
+            {
+                var ribbonColor = subTask.Status switch
                 {
-                    foreach (var subTask in Model.SubTasks)
-                    {
-                        <li>
-                            @Html.DisplayNameFor(m => subTask.Name): @Html.DisplayFor(m => subTask.Name) - @Html.DisplayNameFor(m => subTask.Status): @Html.DisplayFor(m => subTask.Status)
-                        </li>
-                    }
-                }
-            </ul>
-        </dd>
-    </dl>
+                    Status.Pending => "bg-yellow",
+                    Status.InProgress => "bg-blue",
+                    Status.Completed => "bg-green",
+                    Status.Canceled => "bg-red"
+                };
+
+                <div class="col-md-6 col-lg-3">
+
+                    <div class="card">
+                        <div class="ribbon @ribbonColor">@subTask.Status</div>
+                        <div class="card-body">
+                            <h3 class="card-title">@subTask.Name</h3>
+                            <p class="text-secondary">@subTask.Description</p>
+                        </div>
+                        <div class="card-footer">
+                            @subTask.User
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+    </div>
 </div>

@@ -7,6 +7,8 @@
         var itemId = $"itemsAdded_{Guid.NewGuid()}";
 
         <div id="@itemId">
+            <button type="button" onclick="removeSubTask('@itemId')" class="btn-close" aria-label="Close"></button>
+
             @await Html.PartialAsync("SubTasks", item)
         </div>
     }

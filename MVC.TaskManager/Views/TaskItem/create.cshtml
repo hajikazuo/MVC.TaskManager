@@ -16,38 +16,34 @@
                         <div class="row g-5">
 
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <div class="mb-3">
+                            <div class="col-4 mb-3">
                                 <label asp-for="Name" class="form-label"></label>
                                 <input asp-for="Name" class="form-control" />
                                 <span asp-validation-for="Name" class="text-danger"></span>
                             </div>
-                            <div class="mb-3">
-                                <label asp-for="Description" class="form-label"></label>
-                                <textarea asp-for="Description" class="form-control"></textarea>
-                                <span asp-validation-for="Description" class="text-danger"></span>
-                            </div>
-                            <div class="mb-3">
-                                <label asp-for="DueDate" class="form-label"></label>
-                                <input asp-for="DueDate" class="form-control" />
-                                <span asp-validation-for="DueDate" class="text-danger"></span>
-                            </div>
-                            <div class="mb-3">
-                                <label asp-for="IsComplete" class="form-label"></label>
-                                <input asp-for="IsComplete" class="form-check-input" />
-                                <span asp-validation-for="IsComplete" class="text-danger"></span>
-                            </div>
-                            <div class="mb-3">
+                            <div class="col-4 mb-3">
                                 <label asp-for="Status" class="form-label"></label>
                                 <select asp-for="Status" class="form-select" asp-items="ViewBag.Status">
                                 </select>
                                 <span asp-validation-for="Status" class="text-danger"></span>
                             </div>
-                            <div class="mb-3">
+                            <div class="col-4 mb-3">
                                 <label asp-for="UserId" class="form-label"></label>
                                 <select asp-for="UserId" class="form-select" asp-items="ViewBag.UserId">
                                     <option selected value="">Select user</option>
                                 </select>
                             </div>
+                            <div class="col-6 mb-3">
+                                <label asp-for="Description" class="form-label"></label>
+                                <textarea asp-for="Description" class="form-control"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label asp-for="DueDate" class="form-label"></label>
+                                <input asp-for="DueDate" class="form-control" />
+                                <span asp-validation-for="DueDate" class="text-danger"></span>
+                            </div>
+                            
 
                             <fieldset>
                                 <legend>SubTasks:</legend>
@@ -76,8 +72,6 @@
         </div>
     </div>
 </div>
-
-
 
 @section Scripts {
     <script>
