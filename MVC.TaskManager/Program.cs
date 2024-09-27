@@ -18,9 +18,11 @@ namespace MVC.TaskManager
 
             // Add services to the container.
             builder.Services.AddScoped<ISeedService, SeedService>();
+            builder.Services.AddScoped<IUploadService, UploadService>();
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ITaskItemRepository, TaskItemRepository>();
+
             builder.Services.AddControllersWithViews();
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

@@ -52,15 +52,16 @@ namespace MVC.TaskManager.Services.Implementation
             return default;
         }
 
-        private async Task<IdentityResult> CreateUser(string email, string username, string password, Guid userId, string role)
+        private async Task<IdentityResult> CreateUser(string username, string completename, string password, Guid userId, string role)
         {
-            var userReturn = await _userManager.FindByEmailAsync(email);
+            var userReturn = await _userManager.FindByEmailAsync(username);
             if (userReturn == null)
             {
                 User user = new User();
                 user.Id = userId;
                 user.UserName = username;
-                user.Email = email;
+                user.CompleteName = completename;
+                user.Email = username;
                 user.EmailConfirmed = true;
 
                 IdentityResult result = await _userManager.CreateAsync(user, password);

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MVC.TaskManager.Data;
 using MVC.TaskManager.Models.Users;
 using MVC.TaskManager.Repositories.Interface;
+using MVC.TaskManager.ViewModels.AccountViewModel;
 
 namespace MVC.TaskManager.Repositories.Implementation
 {
@@ -48,14 +49,24 @@ namespace MVC.TaskManager.Repositories.Implementation
             return roles?.FirstOrDefault() ?? string.Empty;
         }
 
-        public async Task<List<IdentityRole<Guid>>> GetAllRolesAsync()
+        public async Task<List<SelectGenericListViewModel>> GetAllRolesAsync()
         {
-            var roles = await _context.Roles.ToListAsync();
-            return roles.Select(role => new IdentityRole<Guid>
+            return await _context.Roles.Select(role => new SelectGenericListViewModel
             {
-                Id = role.Id,       
-                Name = role.Name    
-            }).ToList();
+                Id = role.Name,
+                Name = role.Name
+            }).ToListAsync();
+        }
+
+        public async Task RemoveUserRolesAsync(User user)
+        {
+            var userRoles = await _userManager.GetRolesAsync(user);
+            await _userManager.RemoveFromRolesAsync(user, userRoles);
+        }
+
+        public async Task AddUserRoleAsync(User user, string role)
+        {
+            await _userManager.AddToRoleAsync(user, role);
         }
 
     }

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<UserViewModel>
+﻿@using MVC.TaskManager.ViewModels.AccountViewModel
+@model IEnumerable<UserViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -7,7 +8,7 @@
 
 <div class="container-xl">
     <div class="mb-3">
-        <a asp-action="Register" class="btn btn-primary d-none d-sm-inline-block">
+        <a asp-action="Create" class="btn btn-primary d-none d-sm-inline-block">
             <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
             Create new user
@@ -21,7 +22,7 @@
                         <thead>
                             <tr>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.UserName)
+                                    @Html.DisplayNameFor(model => model.CompleteName)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.Email)
@@ -37,7 +38,7 @@
                             {
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.UserName)
+                                        @Html.DisplayFor(modelItem => item.CompleteName)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Email)

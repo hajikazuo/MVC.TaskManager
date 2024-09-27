@@ -1,0 +1,69 @@
+﻿@using MVC.TaskManager.ViewModels.AccountViewModel
+@model RegisterViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="container-xl">
+    <div class="row row-cards">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Create user</h4>
+                </div>
+                <form asp-action="Create" enctype="multipart/form-data">
+                    <div class="card-body">
+                        <div class="row g-5">
+
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="col-6 mb-3">
+                                <label asp-for="UserName" class="form-label"></label>
+                                <input asp-for="UserName" class="form-control" />
+                                <span asp-validation-for="UserName" class="text-danger"></span>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label asp-for="CompleteName" class="form-label"></label>
+                                <input asp-for="CompleteName" class="form-control" />
+                                <span asp-validation-for="CompleteName" class="text-danger"></span>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label asp-for="Password" class="form-label"></label>
+                                <input asp-for="Password" class="form-control" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label asp-for="ConfirmPassword" class="form-label"></label>
+                                <input asp-for="ConfirmPassword" class="form-control" />
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Image" class="form-label"></label>
+                                <input class="form-control" type="file" name="file" id="formFile">
+                                <span asp-validation-for="Image" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="SelectedRole" class="form-label"></label>
+                                <select asp-for="SelectedRole" asp-items="ViewBag.Roles" class="form-select">
+                                    <option selected value="">--- Select ---</option>
+                                </select>
+                                <span asp-validation-for="SelectedRole" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-end">
+                        <div class="d-flex">
+                            <button type="submit" class="btn btn-primary ms-auto">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

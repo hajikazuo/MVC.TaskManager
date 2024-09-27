@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using MVC.TaskManager.Models.Users;
+using MVC.TaskManager.ViewModels.AccountViewModel;
 
 namespace MVC.TaskManager.Repositories.Interface
 {
@@ -10,7 +11,10 @@ namespace MVC.TaskManager.Repositories.Interface
         Task<IdentityResult> CreateAsync(User user, string password);
         Task<IdentityResult> UpdateAsync(User user);
         Task<IdentityResult> DeleteAsync(User user);
+
         Task<string> GetUserRoleAsync(User user);
-        Task<List<IdentityRole<Guid>>> GetAllRolesAsync();
+        Task<List<SelectGenericListViewModel>> GetAllRolesAsync();
+        Task RemoveUserRolesAsync(User user);
+        Task AddUserRoleAsync(User user, string role);
     }
 }
