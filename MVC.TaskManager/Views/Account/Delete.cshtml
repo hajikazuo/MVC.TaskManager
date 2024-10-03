@@ -1,0 +1,38 @@
+﻿@using MVC.TaskManager.ViewModels.AccountViewModel
+@model UserViewModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<div class="container-xl">
+    <div class="row row-cards">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title text-danger">Are you sure you want to delete?</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <p><strong>@Html.DisplayNameFor(model => model.CompleteName):</strong> @Model.CompleteName</p>
+                            <p><strong>@Html.DisplayNameFor(model => model.Email):</strong> <a href="mailto:@Model.Email">@Model.Email</a></p>
+                            <p><strong>@Html.DisplayNameFor(model => model.Role):</strong> @Model.Role</p>
+                        </div>
+                        <div class="col-6">
+                            <img src="/img/users/@Model.Image" alt="User Imagem" class="img-fluid rounded-3 border mb-3" onerror="ImgError(this)">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-end">
+                    <form asp-action="Delete" method="post" class="d-flex">
+                        <input type="hidden" asp-for="@Model.Id">
+                        <a asp-action="Index" class="btn btn-link">Back to List</a>
+                        <button type="submit" class="btn btn-danger ms-auto">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

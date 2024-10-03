@@ -20,6 +20,6 @@ namespace MVC.TaskManager.ViewModels.AccountViewModel
         public string ConfirmPassword { get; set; }
         [Required]
         public string SelectedRole { get; set; }
-        public string Image { get; set; }
+        public string? Image { get; set; }
     }
 }

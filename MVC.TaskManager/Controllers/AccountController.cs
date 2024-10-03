@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -33,12 +34,39 @@ namespace MVC.TaskManager.Controllers
                 {
                     Id = user.Id,
                     Email = user.Email,
-                    CompleteName = user.CompleteName,   
-                    Role = await _userRepository.GetUserRoleAsync(user)
+                    CompleteName = user.CompleteName,
+                    Role = await _userRepository.GetUserRoleAsync(user),
+                    Image = user.Image
                 });
             }
 
             return View(model);
+        }
+
+        public async Task<IActionResult> Details(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _userRepository.GetUserByIdAsync(id.Value);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userDetails = new UserViewModel
+            {
+                Id = user.Id,
+                Email = user.Email,
+                CompleteName = user.CompleteName,
+                Role = await _userRepository.GetUserRoleAsync(user),
+                Image = user.Image
+            };
+
+            return View(userDetails);
         }
 
         [HttpGet]
@@ -51,30 +79,33 @@ namespace MVC.TaskManager.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(RegisterViewModel model, IFormFile file, string returnUrl = null)
+        public async Task<IActionResult> Create(RegisterViewModel model, IFormFile? file, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
 
-            var user = new User
+            if (ModelState.IsValid)
             {
-                UserName = model.UserName,
-                CompleteName = model.CompleteName,  
-                Email = model.UserName,
-                Image = await _uploadService.UploadPhoto(file)
-            };
-
-            var result = await _userRepository.CreateAsync(user, model.Password);
-
-            if (result.Succeeded)
-            {
-
-                if (model.SelectedRole != null)
+                var user = new User
                 {
-                    await _userRepository.RemoveUserRolesAsync(user);
-                    await _userRepository.AddUserRoleAsync(user, model.SelectedRole);
-                }
+                    UserName = model.UserName,
+                    CompleteName = model.CompleteName,
+                    Email = model.UserName,
+                    Image = await _uploadService.UploadPhoto(file)
+                };
 
-                return RedirectToAction(nameof(Index));
+                var result = await _userRepository.CreateAsync(user, model.Password);
+
+                if (result.Succeeded)
+                {
+
+                    if (model.SelectedRole != null)
+                    {
+                        await _userRepository.RemoveUserRolesAsync(user);
+                        await _userRepository.AddUserRoleAsync(user, model.SelectedRole);
+                    }
+
+                    return RedirectToAction(nameof(Index));
+                }
             }
 
             ViewData["Roles"] = new SelectList(await _userRepository.GetAllRolesAsync(), "Id", "Name");
@@ -84,30 +115,31 @@ namespace MVC.TaskManager.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id, string returnUrl = null)
         {
-                var userDB = await _userRepository.GetUserByIdAsync(id);
-                if (userDB == null)
-                {
-                    return RedirectToAction("Index", "Account");
-                }
+            var userDB = await _userRepository.GetUserByIdAsync(id);
+            if (userDB == null)
+            {
+                return RedirectToAction("Index", "Account");
+            }
 
-                var role = await _userRepository.GetUserRoleAsync(userDB);
+            var role = await _userRepository.GetUserRoleAsync(userDB);
 
-                var model = new RegisterViewModel
-                {
-                    Id = userDB.Id, 
-                    UserName = userDB.UserName ?? String.Empty,
-                    CompleteName = userDB.CompleteName,
-                    SelectedRole = role
-                };
+            var model = new RegisterViewModel
+            {
+                Id = userDB.Id,
+                UserName = userDB.UserName ?? String.Empty,
+                CompleteName = userDB.CompleteName,
+                Image = userDB.Image,
+                SelectedRole = role
+            };
 
-                ViewData["ReturnUrl"] = returnUrl;
-                ViewData["Roles"] = new SelectList(await _userRepository.GetAllRolesAsync(), "Id", "Name");
-                return View(model);
+            ViewData["ReturnUrl"] = returnUrl;
+            ViewData["Roles"] = new SelectList(await _userRepository.GetAllRolesAsync(), "Id", "Name");
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(RegisterViewModel model, Guid id, string returnUrl = null)
+        public async Task<IActionResult> Edit(RegisterViewModel model, Guid id, IFormFile? file, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
 
@@ -123,12 +155,27 @@ namespace MVC.TaskManager.Controllers
                 }
 
                 user.UserName = model.UserName;
+                user.CompleteName = model.CompleteName;
                 user.Email = model.UserName;
+
+                if (file != null)
+                {
+                    user.Image = await _uploadService.UploadPhoto(file);
+                }
+                else
+                {
+                    user.Image = model.Image;
+                }
 
                 var result = await _userRepository.UpdateAsync(user);
 
                 if (result.Succeeded)
                 {
+                    if (model.SelectedRole != null)
+                    {
+                        await _userRepository.RemoveUserRolesAsync(user);
+                        await _userRepository.AddUserRoleAsync(user, model.SelectedRole);
+                    }
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -136,5 +183,47 @@ namespace MVC.TaskManager.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> Delete(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _userRepository.GetUserByIdAsync(id.Value);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userDetails = new UserViewModel
+            {
+                Id = user.Id,
+                Email = user.Email,
+                CompleteName = user.CompleteName,
+                Role = await _userRepository.GetUserRoleAsync(user),
+                Image = user.Image
+            };
+
+            return View(userDetails);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var user = await _userRepository.GetUserByIdAsync(id);
+
+            if (user != null)
+            {
+                var result = await _userRepository.DeleteAsync(user);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

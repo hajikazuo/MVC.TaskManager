@@ -13,27 +13,16 @@
                     <h4 class="card-title">Task details</h4>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col text-truncate">
-                            <a href="#" class="text-body d-block">@Html.DisplayNameFor(model => model.Name)</a>
-                            <div class="text-secondary text-truncate mt-n1">@Html.DisplayFor(model => model.Name)</div>
-                        </div>
-                        <div class="col text-truncate">
-                            <a href="#" class="text-body d-block">@Html.DisplayNameFor(model => model.Description)</a>
-                            <div class="text-secondary text-truncate mt-n1">@Html.DisplayFor(model => model.Description)</div>
-                        </div>
-                        <div class="col text-truncate">
-                            <a href="#" class="text-body d-block">@Html.DisplayNameFor(model => model.DueDate)</a>
-                            <div class="text-secondary text-truncate mt-n1">@Html.DisplayFor(model => model.DueDate)</div>
-                        </div>
-                        <div class="col text-truncate">
-                            <a href="#" class="text-body d-block">@Html.DisplayNameFor(model => model.Status)</a>
-                            <div class="text-secondary text-truncate mt-n1">@Html.DisplayFor(model => model.Status)</div>
-                        </div>
-                        <div class="col text-truncate">
-                            <a href="#" class="text-body d-block">@Html.DisplayNameFor(model => model.User.UserName)</a>
-                            <div class="text-secondary text-truncate mt-n1">@Html.DisplayFor(model => model.User.UserName)</div>
-                        </div>
+                    <p><strong>@Html.DisplayNameFor(model => model.Name):</strong> @Model.Name</p>
+                    <p><strong>@Html.DisplayNameFor(model => model.DueDate):</strong> @Model.DueDate</p>
+                    <p><strong>@Html.DisplayNameFor(model => model.Status):</strong> @Model.Status</p>
+                    <p><strong>@Html.DisplayNameFor(model => model.User):</strong> @Model.User.CompleteName</p>
+                    <p><strong>@Html.DisplayNameFor(model => model.Description):</strong> @Model.Description</p>
+                </div>
+                <div class="card-footer text-end">
+                    <div class="d-flex">
+                        <a asp-action="Index" class="btn btn-link">Back to List</a>
+                        <a asp-action="Edit" asp-route-id="@Model.TaskItemId" class="btn btn-primary ms-auto">Edit</a>
                     </div>
                 </div>
             </div>
@@ -61,7 +50,7 @@
                             <p class="text-secondary">@subTask.Description</p>
                         </div>
                         <div class="card-footer">
-                            @subTask.User
+                            @subTask.User.CompleteName
                         </div>
                     </div>
                 </div>

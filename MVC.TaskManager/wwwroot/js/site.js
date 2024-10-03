@@ -1,4 +1,11 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿window.addEventListener('DOMContentLoaded', event => {
+    let table = new DataTable('table', {
+        responsive: true
+    });
+});
 
-// Write your JavaScript code.
+function ImgError(source) {
+    source.src = "/img/static/user.png"
+    source.onerror = "";
+    return true;
+}
