@@ -2,7 +2,7 @@
 @model TaskItem
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Delete";
 }
 
 <div class="container-xl">
@@ -10,7 +10,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Task details</h4>
+                    <h4 class="card-title text-danger">Are you sure you want to delete?</h4>
                 </div>
                 <div class="card-body">
                     <p><strong>@Html.DisplayNameFor(model => model.Name):</strong> @Model.Name</p>
@@ -23,16 +23,22 @@
                     <p><strong>@Html.DisplayNameFor(model => model.Description):</strong> @Model.Description</p>
                 </div>
                 <div class="card-footer text-end">
-                    <div class="d-flex">
+                    <form asp-action="Delete" class="d-flex">
+                        <input type="hidden" asp-for="@Model.TaskItemId">
                         <a asp-action="Index" class="btn btn-link">Back to List</a>
-                        <a asp-action="Edit" asp-route-id="@Model.TaskItemId" class="btn btn-primary ms-auto">Edit</a>
-                    </div>
+                        <button type="submit" class="btn btn-danger ms-auto">Delete</button>
+                    </form>
                 </div>
             </div>
 
 
             @if (Model.SubTasks != null && Model.SubTasks.Count > 0)
             {
+                <div class="alert alert-danger mt-3" role="alert">
+                    Subtasks will also be deleted!!
+                </div>
+
+
                 <h2 class="my-3">Subtasks</h2>
                 foreach (var subTask in Model.SubTasks)
                 {

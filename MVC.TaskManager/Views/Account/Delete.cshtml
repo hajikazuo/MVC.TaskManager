@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <div class="card-footer text-end">
-                    <form asp-action="Delete" method="post" class="d-flex">
+                    <form asp-action="Delete" class="d-flex">
                         <input type="hidden" asp-for="@Model.Id">
                         <a asp-action="Index" class="btn btn-link">Back to List</a>
                         <button type="submit" class="btn btn-danger ms-auto">Delete</button>

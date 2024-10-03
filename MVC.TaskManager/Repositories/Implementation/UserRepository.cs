@@ -33,14 +33,28 @@ namespace MVC.TaskManager.Repositories.Implementation
         {
             return await _userManager.CreateAsync(user, password);  
         }
-        public Task<IdentityResult> UpdateAsync(User user)
+        public async Task<IdentityResult> UpdateAsync(User user)
         {
-            return _userManager.UpdateAsync(user);
+            return await _userManager.UpdateAsync(user);
         }
 
-        public Task<IdentityResult> DeleteAsync(User user)
+        public async Task<IdentityResult> DeleteAsync(User user)
         {
-            return _userManager.DeleteAsync(user);
+            var taskItems = await _context.TaskItems.Where(t => t.UserId == user.Id).ToListAsync();
+            foreach (var task in taskItems)
+            {
+                task.UserId = null;
+            }
+
+            var subTasks = await _context.SubTasks.Where(st => st.UserId == user.Id).ToListAsync();
+            foreach (var subTask in subTasks)
+            {
+                subTask.UserId = null; 
+            }
+
+            await _context.SaveChangesAsync();
+
+            return await _userManager.DeleteAsync(user);
         }
 
         public async Task<string> GetUserRoleAsync(User user)

@@ -9,5 +9,6 @@ namespace MVC.TaskManager.Repositories.Interface
         Task<TaskItem> GetByIdAsync(Guid id);
         Task<TaskItem> CreateAsync(TaskItem taskItem);
         Task<TaskItem> UpdateAsync(TaskItem taskItem);
+        Task<TaskItem> DeleteAsync(Guid id);
     }
 }

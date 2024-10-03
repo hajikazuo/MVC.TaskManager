@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using MVC.TaskManager.Extensions;
 using MVC.TaskManager.Models;
 using MVC.TaskManager.Models.Enums;
@@ -34,7 +35,7 @@ namespace MVC.TaskManager.Controllers
         public async Task<IActionResult> Create()
         {
             var users = await _userRepository.GetAllUsersAsync();
-            ViewData["UserId"] = new SelectList(users, "Id", "UserName");
+            ViewData["UserId"] = new SelectList(users, "Id", "CompleteName");
             ViewData["Status"] = this.AssembleSelectListToEnum(new Status());
             return View();
         }
@@ -59,7 +60,7 @@ namespace MVC.TaskManager.Controllers
             }
 
             var users = await _userRepository.GetAllUsersAsync();
-            ViewData["UserId"] = new SelectList(users, "Id", "UserName");
+            ViewData["UserId"] = new SelectList(users, "Id", "CompleteName");
             ViewData["Status"] = this.AssembleSelectListToEnum(new Status());
             return RedirectToAction(nameof(Index));
         }
@@ -85,7 +86,7 @@ namespace MVC.TaskManager.Controllers
             };
 
             var users = await _userRepository.GetAllUsersAsync();
-            ViewData["UserId"] = new SelectList(users, "Id", "UserName");
+            ViewData["UserId"] = new SelectList(users, "Id", "CompleteName");
             ViewData["Status"] = this.AssembleSelectListToEnum(new Status());
             return View(task);
         }
@@ -119,6 +120,32 @@ namespace MVC.TaskManager.Controllers
             ViewData["Status"] = this.AssembleSelectListToEnum(new Status());
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var taskItem = await _taskItemRepository.GetByIdAsync(id);
+            if (taskItem == null)
+            {
+                return NotFound();
+            }
+
+            return View(taskItem);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            var taskItem = await _taskItemRepository.DeleteAsync(id);
+
+            if(taskItem == null)
+            {
+                return NotFound();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
 
         [ResponseCache(NoStore = true, Duration = 0)]
         public async Task<IActionResult> NewSubTask()

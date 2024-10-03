@@ -209,8 +209,8 @@ namespace MVC.TaskManager.Controllers
             return View(userDetails);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Delete(Guid id)
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var user = await _userRepository.GetUserByIdAsync(id);
 

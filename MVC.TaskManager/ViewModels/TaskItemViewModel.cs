@@ -16,6 +16,7 @@ namespace MVC.TaskManager.ViewModels
         public bool IsComplete { get; set; }
         public Status Status { get; set; }
 
+        [Display(Name = "User")]
         public Guid? UserId { get; set; }
         public List<SubTask> SubTasks { get; set; } = new List<SubTask>();
     }

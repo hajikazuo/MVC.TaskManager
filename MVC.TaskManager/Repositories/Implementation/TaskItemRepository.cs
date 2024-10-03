@@ -26,6 +26,7 @@ namespace MVC.TaskManager.Repositories.Implementation
             var existingTask = await _context.TaskItems
                 .Include(u => u.User)
                 .Include(s => s.SubTasks)
+                .ThenInclude(subTask => subTask.User)
                 .FirstOrDefaultAsync(x => x.TaskItemId == id);
 
             if (existingTask == null)
@@ -60,6 +61,22 @@ namespace MVC.TaskManager.Repositories.Implementation
 
             await _context.SaveChangesAsync();
             return existingTask;    
+        }
+
+        public async Task<TaskItem> DeleteAsync(Guid id)
+        {
+            var existingTask = _context.TaskItems.Include(t => t.SubTasks).FirstOrDefault(x => x.TaskItemId == id);
+
+            if (existingTask != null)
+            {
+                _context.SubTasks.RemoveRange(existingTask.SubTasks);
+
+                _context.TaskItems.Remove(existingTask);
+                await _context.SaveChangesAsync();
+                return existingTask;
+            }
+
+            return null;
         }
     }
 }
