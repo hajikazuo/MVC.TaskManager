@@ -18,6 +18,7 @@ namespace MVC.TaskManager.ViewModels.AccountViewModel
         [DataType(DataType.Password)]
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
+
         [Required]
         public string SelectedRole { get; set; }
         public string? Image { get; set; }

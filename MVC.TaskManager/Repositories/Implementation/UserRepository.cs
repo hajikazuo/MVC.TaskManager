@@ -13,10 +13,11 @@ namespace MVC.TaskManager.Repositories.Implementation
         private readonly SignInManager<User> _signInManager;
         private readonly AppDbContext _context;
 
-        public UserRepository(AppDbContext context, UserManager<User> userManager)
+        public UserRepository(AppDbContext context, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _context = context;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public async Task<List<User>> GetAllUsersAsync()
@@ -57,6 +58,16 @@ namespace MVC.TaskManager.Repositories.Implementation
             return await _userManager.DeleteAsync(user);
         }
 
+        public async Task<IdentityResult> RemovePasswordAsync(User user)
+        {
+            return await _userManager.RemovePasswordAsync(user);
+        }
+
+        public async Task<IdentityResult> AddPasswordAsync(User user, string newPassword)
+        {
+            return await _userManager.AddPasswordAsync(user, newPassword);
+        }
+
         public async Task<string> GetUserRoleAsync(User user)
         {
             var roles = await _userManager.GetRolesAsync(user);
@@ -83,5 +94,13 @@ namespace MVC.TaskManager.Repositories.Implementation
             await _userManager.AddToRoleAsync(user, role);
         }
 
+        public async Task<SignInResult> LoginAsync(LoginViewModel model)
+        {
+            return await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+        }
+        public async Task LogoutAsync()
+        {
+            await _signInManager.SignOutAsync();
+        }
     }
 }

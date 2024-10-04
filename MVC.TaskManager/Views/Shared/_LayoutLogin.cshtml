@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MVC.TaskManager</title>
+
+    <link href="~/css/tabler.css" rel="stylesheet" />
+</head>
+<body class=" d-flex flex-column">
+    <div class="page page-center">
+        @RenderBody()
+    </div>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
