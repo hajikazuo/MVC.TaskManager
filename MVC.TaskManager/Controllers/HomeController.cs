@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MVC.TaskManager.Models;
+using MVC.TaskManager.Models.Users;
+using MVC.TaskManager.Repositories.Interface;
+using MVC.TaskManager.ViewModels;
 using System.Diagnostics;
 
 namespace MVC.TaskManager.Controllers
@@ -8,16 +12,37 @@ namespace MVC.TaskManager.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ITaskItemRepository _taskItemRepository;
+        private readonly ISubTaskRepository _subTaskRepository;
+        private readonly UserManager<User> _userManager;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ITaskItemRepository taskItemRepository, ISubTaskRepository subTaskRepository, UserManager<User> userManager)
         {
-            _logger = logger;
+            _taskItemRepository = taskItemRepository;
+            _subTaskRepository = subTaskRepository;
+            _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            if (!User.Identity.IsAuthenticated)
+            {
+                return View("Login");
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+
+            var taskItems = await _taskItemRepository.GetAllAsync(user);
+
+            var subtasks = await _subTaskRepository.GetAllAsync(user);
+
+            var data = new HomeViewModel
+            {
+                TaskItems = taskItems,
+                SubTasks = subtasks
+            };
+
+            return View(data);
         }
 
     }

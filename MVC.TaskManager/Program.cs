@@ -22,6 +22,7 @@ namespace MVC.TaskManager
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ITaskItemRepository, TaskItemRepository>();
+            builder.Services.AddScoped<ISubTaskRepository, SubTaskRepository>();
 
             builder.Services.AddControllersWithViews();
 

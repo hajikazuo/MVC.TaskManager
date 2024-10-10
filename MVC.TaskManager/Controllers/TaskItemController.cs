@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVC.TaskManager.Extensions;
 using MVC.TaskManager.Models;
 using MVC.TaskManager.Models.Enums;
+using MVC.TaskManager.Models.Users;
 using MVC.TaskManager.Repositories.Interface;
 using MVC.TaskManager.ViewModels;
 
@@ -13,16 +15,25 @@ namespace MVC.TaskManager.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly ITaskItemRepository _taskItemRepository;
+        private readonly UserManager<User> _userManager;
 
-        public TaskItemController(IUserRepository userRepository, ITaskItemRepository taskItemRepository)
+        public TaskItemController(IUserRepository userRepository, ITaskItemRepository taskItemRepository, UserManager<User> userManager)
         {
             _userRepository = userRepository;
             _taskItemRepository = taskItemRepository;
+            _userManager = userManager;
         }
 
         public async Task <IActionResult> Index()
         {
-            var taskItems = await _taskItemRepository.GetAllAsync();
+            if (!User.Identity.IsAuthenticated)
+            {
+                return View("Login");
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+
+            var taskItems = await _taskItemRepository.GetAllAsync(user);
             return View(taskItems);
         }
 
